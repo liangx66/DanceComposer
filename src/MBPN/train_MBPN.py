@@ -27,15 +27,15 @@ def parse_args():
     parser.add_argument('-g', '--gpus', type=int, nargs='+', help="Ids of gpu")
 
     #load, input, save configurations:
-    parser.add_argument('-t', '--train_data', default= '../data/AIST/train_MBPN.txt',
+    parser.add_argument('-t', '--train_data', default= '../../data/AIST/train_MBPN.txt',
                         help="Path of the training data")
-    parser.add_argument('-v', '--val_data', default='../data/AIST/val_MBPN.txt',
+    parser.add_argument('-v', '--val_data', default='../../data/AIST/val_MBPN.txt',
                         help="Path of the val data")
-    parser.add_argument('-music_beat_path', '--music_beat_path', default='../data/AIST/music_beat',
+    parser.add_argument('-music_beat_path', '--music_beat_path', default='../../data/AIST/music_beat',
                         help="Path of the music beat data")
     parser.add_argument('-p', '--path', help="If set, load model from the given path")
-    parser.add_argument('-ckpt_path', '--ckpt_path', type=str, default="../ckpt/MBPN", help="ckpt")
-    parser.add_argument('-log_dir', '--log_dir', type=str, default='../logs/MBPN', help="log_dir")
+    parser.add_argument('-ckpt_path', '--ckpt_path', type=str, default="../../ckpt/MBPN", help="ckpt")
+    parser.add_argument('-log_dir', '--log_dir', type=str, default='../../logs/MBPN', help="log_dir")
     
     #optimization hyper parameters:
     parser.add_argument('-lr', '--lr', type=float, default=0.0001, help="learning rate")
