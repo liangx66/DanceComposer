@@ -37,7 +37,7 @@ def epoch_time(start_time: float, end_time: float):
 
 
 def train_dp():
-    parser = argparse.ArgumentParser(description="Args for training music classifier")
+    parser = argparse.ArgumentParser(description="Args for training")
     parser.add_argument('-n', '--name', default="debug",
                         help="Name of the experiment, also the log file and checkpoint directory. If 'debug', checkpoints won't be saved")
     parser.add_argument('-g', '--gpus', type=int, nargs='+', help="Ids of gpu")

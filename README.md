@@ -66,6 +66,10 @@ python ./src/SSM/train_joint.py
 
 To train the Drum Transformer on GrooveMIDI.
 
+```python
+python ./src/PCMG/train_drum_Transformer.py
+```
+
 To train the Multi-track Transformer on LPD.
 
 
