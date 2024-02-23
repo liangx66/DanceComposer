@@ -12,7 +12,7 @@ The datasets utilized in our paper are as follows:
 
 ### 2.1 AIST
 
-**AIST Dance Video Database (AIST Dance DB)** is a shared database containing original street dance videos with copyright-cleared dance music.  The database is available [here](https://aistdancedb.ongaaccel.jp/).
+**AIST Dance Video Database (AIST Dance DB)** is a shared database containing original street dance videos with copyright-cleared dance music. The database is available [here](https://aistdancedb.ongaaccel.jp/).
 
 ### 2.2 GTZAN
 
@@ -31,6 +31,7 @@ The **Lakh Pianoroll Dataset (LPD)** is a collection of 174,154 multitrack pian
 - extract human skeleton keypoints using OpenPose
 - extract ground truth music beats
 - extract log mel-scaled spectrogram
+- convert drum track/multi-track MIDI into token sequence
 
 ## 4. Training
 
@@ -71,6 +72,8 @@ python ./src/PCMG/train_drum_Transformer.py
 ```
 
 To train the Multi-track Transformer on LPD.
-
+```python
+python ./src/PCMG/train_multi_Transformer.py
+```
 
 

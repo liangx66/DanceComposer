@@ -19,9 +19,9 @@ DECODER_DIMENSION = {
     'n_beat'    : 8,
 }
 
-class CPDataset(torch.utils.data.Dataset):
+class DrumDataset(torch.utils.data.Dataset):
     """
-    This is the main class to load video data.
+    This is the main class to load drum data.
     """        
     def __init__(self, npz_file_path, split = 'train'):
         self.split = split

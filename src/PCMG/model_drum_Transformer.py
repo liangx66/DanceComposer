@@ -94,7 +94,7 @@ last dimension of input data | attribute:
 '''
 class DrumTransformer(nn.Module):
     def __init__(self, n_token, 
-                        emb_sizes = [8, 32, 32, 512, 32, 256, 32], 
+                        emb_sizes, 
                         d_model=512,
                         num_encoder_layers=8,
                         num_decoder_layers=8,
@@ -137,7 +137,7 @@ class DrumTransformer(nn.Module):
         self.decoder_emb_onset_density = Embeddings(self.n_token[6], self.emb_sizes[6])
         self.decoder_pos_emb = BeatPositionalEncoding(self.d_model, self.dropout)
 
-        # # linear
+        # linear
         self.encoder_in_linear = nn.Linear(int(np.sum(self.emb_sizes[1])), self.d_model)
         self.decoder_in_linear = nn.Linear(int(np.sum(self.emb_sizes)), self.d_model)
 
@@ -181,7 +181,6 @@ class DrumTransformer(nn.Module):
         loss = loss * loss_mask
         loss = torch.sum(loss) / torch.sum(loss_mask)
         return loss
-
 
     def forward_hidden(self, en_x, de_x, disable_BE, disable_PE, is_training=True):
         '''
@@ -406,11 +405,6 @@ class DrumTransformer(nn.Module):
         disable_BE = kwargs['disable_BE']
         disable_PE = kwargs['disable_PE']
 
-        def get_p_beat(cur_bar, cur_beat, n_beat):
-            all_beat = cur_bar * 16 + cur_beat - 1  
-            p_beat = round(all_beat / n_beat * 100)+1
-            return p_beat
-
         dictionary = {'bar': 17}
         init = np.array([[1, 17, init_density, 0, 0, 0, 0, 0], ])   # initial input for decoder
         count = 1
@@ -466,12 +460,12 @@ class DrumTransformer(nn.Module):
 
 
     def train_forward(self, **kwargs):
-        en_x = kwargs['en_x']
-        de_x = kwargs['de_x']
-        target = kwargs['target']
-        loss_mask = kwargs['loss_mask']
-        disable_BE = kwargs['disable_BE']
-        disable_PE = kwargs['disable_PE']
+        en_x = kwargs['en_x']               # drum beats
+        de_x = kwargs['de_x']               # input drum track tokens
+        target = kwargs['target']           # target drum track tokens
+        loss_mask = kwargs['loss_mask']     # loss mask
+        disable_BE = kwargs['disable_BE']   # Whether to use Beat Embedding for drum beats
+        disable_PE = kwargs['disable_PE']   # Whether to use Positional Encoding for drum beats
 
         h, y_type = self.forward_hidden(en_x, de_x, disable_BE, disable_PE, is_training=True)
         y_barbeat, y_pitch, y_duration, y_velocity, y_onset_density, y_beat_density = self.forward_output(h, target)

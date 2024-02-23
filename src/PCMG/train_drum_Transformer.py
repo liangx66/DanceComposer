@@ -19,8 +19,8 @@ sys.path.append(".")
 
 import utils
 from utils import log, Saver, network_paras, CustomSchedule
-from model import DrumTransformer
-from dataset import CPDataset
+from model_drum_Transformer import DrumTransformer
+from dataset_drum import DrumDataset
 
 def epoch_time(start_time: float, end_time: float):
     elapsed_time = end_time - start_time
@@ -94,11 +94,11 @@ def train():
         utils.flog = open("../logs/" + args.name + ".log", "w")
 
     #### create data loader ####
-    train_set = CPDataset(npz_file_path = args.train_data, split = 'train')
+    train_set = DrumDataset(npz_file_path = args.train_data, split = 'train')
     train_loader = DataLoader(train_set, batch_size = batch_size, num_workers=16, shuffle=True)
     decoder_n_class = train_set.get_decoder_n_class()   
     log("decoder_n_class", decoder_n_class)
-    val_set = CPDataset(npz_file_path = args.val_data, split = 'val')
+    val_set = DrumDataset(npz_file_path = args.val_data, split = 'val')
     val_loader = DataLoader(val_set, batch_size = 1, shuffle=False)
 
     # create saver
@@ -154,10 +154,10 @@ def train():
         for i, (en_x, de_x, de_y, de_mask) in enumerate(train_loader):
             saver_agent.global_step_increment()
 
-            en_x = en_x.cuda(non_blocking=True)
-            de_x = de_x.cuda(non_blocking=True)
-            de_y = de_y.cuda(non_blocking=True)
-            de_mask = de_mask.cuda(non_blocking=True)
+            en_x = en_x.cuda(non_blocking=True)         # drum beats
+            de_x = de_x.cuda(non_blocking=True)         # input drum track tokens
+            de_y = de_y.cuda(non_blocking=True)         # target drum track tokens
+            de_mask = de_mask.cuda(non_blocking=True)   # loss mask
 
             # losses: [loss_barbeat, loss_type, loss_pitch, loss_duration, loss_instr, loss_velocity, loss_onset_density, loss_beat_density]
             losses = net(is_train=True, en_x=en_x, de_x=de_x, target=de_y, loss_mask=de_mask, disable_BE=args.disable_BE, disable_PE=args.disable_PE)
@@ -170,7 +170,6 @@ def train():
             if max_grad_norm is not None:
                 clip_grad_norm_(net.parameters(), max_grad_norm)
             optimizer.step()
-            # acc
             with torch.no_grad():
                 epoch_loss += loss.item()
                 epoch_losses += np.array([l.item() for l in losses])
